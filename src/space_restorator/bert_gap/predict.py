@@ -3,7 +3,6 @@ from transformers import (
     AutoModelForTokenClassification,
 )
 
-import torch
 from argparse import ArgumentParser
 
 

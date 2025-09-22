@@ -2,7 +2,6 @@ from transformers import (
     AutoTokenizer,
     AutoModelForTokenClassification,
 )
-import torch
 from argparse import ArgumentParser
 
 

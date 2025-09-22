@@ -3,7 +3,6 @@ from .cascade import cascade, MODEL_GAP, MODEL_SPACE
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from pathlib import Path
 import pandas as pd
-import torch
 
 
 def find_pos(text: str, pred: str):

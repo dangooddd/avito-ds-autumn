@@ -8,6 +8,26 @@
 - **BERT для нахождения пробелов** - предсказывает позиции пробелов, реализация в модуле `space_restorer.bert`
 - **BERT для 'склеивания' нарочно созданных пустот** - находит токены, нарочно разделенные пробелом, реализация в модуле `space_restorer.bert_gap`
 
+## Зависимости
+В качестве утилиты управления зависимостями использовался [uv](https://docs.astral.sh/uv/).
+Для запуска кода рекомендуется использовать его:
+```sh
+pip install uv # или pipx install uv
+uv venv --python 3.13 .venv
+uv sync
+```
+
+Можно установить через `pip`:
+```sh
+pip install -r requirements # не тестировал
+pip install -e . # обязательно!
+```
+
+- PyTorch
+- Transformers
+- Pandas
+- Scikit-learn
+
 ## Структура проекта
 
 ```
@@ -76,25 +96,6 @@ uv run -m space_restorator --max-tries 3 --spaces 0.2 --save-path data/output/ou
 Модель обучена на видеокарте `NVIDIA 5060 Ti 16GB`.
 По умолчанию запускается на CPU, потребляет порядка ~3GB оперативной памяти.
 Для более быстрой работы алгоритма можно уменьшить максимальное число каскадных повторений с помощью флага `--max-tries`.
-
-## Зависимости
-В качестве утилиты управления зависимостями использовался [uv](https://docs.astral.sh/uv/).
-Для запуска кода рекомендуется использовать его:
-```sh
-pip install uv # или pipx install uv
-uv venv --python 3.13 .venv
-uv sync
-```
-
-Можно установить через `pip`:
-```sh
-pip install -r requirements # не тестировал
-```
-
-- PyTorch
-- Transformers
-- Pandas
-- Scikit-learn
 
 ## Упоминания
 

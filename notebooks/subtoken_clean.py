@@ -1,13 +1,6 @@
 # %%
 from transformers import AutoTokenizer
-from datasets import (
-    load_dataset,
-    DatasetDict,
-    IterableDataset,
-    Features,
-    Sequence,
-    Value,
-)
+from datasets import load_dataset
 
 tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
 text = "куплю айфон 14про"
@@ -81,4 +74,4 @@ tokenized_dataset = raw_datasets.map(
 
 print(tokenized_dataset)
 # print(next(tokenized_dataset.iter(2)))
-print(list(tokenized_dataset.take(2)))
+# print(list(tokenized_dataset.take(2)))

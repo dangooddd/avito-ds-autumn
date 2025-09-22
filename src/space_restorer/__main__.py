@@ -4,6 +4,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
+import torch
 
 
 def find_pos(text: str, pred: str):
@@ -61,11 +62,15 @@ if __name__ == "__main__":
         required=True,
         help="Пусть для сохранения выходного файла.",
     )
+    parser.add_argument(
+        "--cpu",
+        action="store_true",
+        help="Принудительно использовать CPU",
+    )
     args = parser.parse_args()
 
-    # cpu, так как используются операции с текстом
-    # TODO: адаптировать для GPU
-    device = "cpu"
+    device = "cuda" if torch.cuda.is_available() and not args.cpu else "cpu"
+    print(f"Используется устройство: {device}")
 
     tokenizer_gap = AutoTokenizer.from_pretrained(args.pretrained_gap)
     tokenizer_space = AutoTokenizer.from_pretrained(args.pretrained_space)
@@ -102,3 +107,4 @@ if __name__ == "__main__":
     df = pd.DataFrame({"id": df["id"], "predicted_positions": results})
     args.save_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(args.save_path, index=False)
+    print(f"Файл с результатами сохранен по пути {args.save_path}")

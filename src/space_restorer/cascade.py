@@ -4,6 +4,7 @@ from .bert_gap.dataset import insert_random_spaces_with_indices
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from argparse import ArgumentParser
 import re
+import torch
 
 
 MODEL_GAP = "models/checkpoint-gap"
@@ -62,13 +63,14 @@ def cascade(
     for i in range(max_tries):
         text = gap_predict([text], tokenizer_gap, model_gap)[0]
         text = add_spaces_around_words(text, dictionary)
+        text = space_predict([text], tokenizer_space, model_space)[0]
+
         if spaces > 0:
-            text = space_predict([text], tokenizer_space, model_space)[0]
-        text, _ = insert_random_spaces_with_indices(text, int(len(text) * spaces))
+            text, _ = insert_random_spaces_with_indices(text, int(len(text) * spaces))
         text = re.sub(r"\s+", " ", text)
+
         if prev == text and i >= min_tries:
             break
-
         prev = text
 
     text = gap_predict([text], tokenizer_gap, model_gap)[0].strip()
@@ -108,13 +110,25 @@ if __name__ == "__main__":
         default=3,
         help="Минимальное число итераций каскадного алгоритма.",
     )
+    parser.add_argument(
+        "--cpu",
+        action="store_true",
+        help="Принудительно использовать CPU",
+    )
     parser.add_argument("text", type=str, help="Входная строка")
     args = parser.parse_args()
 
+    device = "cuda" if torch.cuda.is_available() and not args.cpu else "cpu"
+    print(f"Используется устройство: {device}")
+
     tokenizer_gap = AutoTokenizer.from_pretrained(args.pretrained_gap)
     tokenizer_space = AutoTokenizer.from_pretrained(args.pretrained_space)
-    model_gap = AutoModelForTokenClassification.from_pretrained(args.pretrained_gap)
-    model_space = AutoModelForTokenClassification.from_pretrained(args.pretrained_space)
+    model_gap = AutoModelForTokenClassification.from_pretrained(args.pretrained_gap).to(
+        device
+    )
+    model_space = AutoModelForTokenClassification.from_pretrained(
+        args.pretrained_space
+    ).to(device)
 
     result = cascade(
         model_space=model_space,

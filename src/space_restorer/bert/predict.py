@@ -3,6 +3,7 @@ from transformers import (
     AutoModelForTokenClassification,
 )
 from argparse import ArgumentParser
+import torch
 
 
 def restore_spaces(tokens, offsets, labels, tokenizer):
@@ -46,14 +47,15 @@ def predict(texts, tokenizer, model):
         return_tensors="pt",
         is_split_into_words=False,
         return_offsets_mapping=True,
-    )
+    ).to(model.device)
 
     offset_mapping = inputs["offset_mapping"]
     del inputs["offset_mapping"]  # модель не принимает offset_mapping
 
-    outputs = model(**inputs)["logits"].argmax(dim=-1)
-    restored = []
+    with torch.no_grad():
+        outputs = model(**inputs)["logits"].argmax(dim=-1).cpu()
 
+    restored = []
     for tokens, offsets, labels in zip(
         [tokenizer.convert_ids_to_tokens(ids) for ids in inputs["input_ids"]],
         offset_mapping,
@@ -70,7 +72,8 @@ if __name__ == "__main__":
     parser.add_argument("text", type=str)
     args = parser.parse_args()
 
-    model = AutoModelForTokenClassification.from_pretrained(args.pretrained)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = AutoModelForTokenClassification.from_pretrained(args.pretrained).to(device)
     tokenizer = AutoTokenizer.from_pretrained(args.pretrained)
 
     texts = [args.text]

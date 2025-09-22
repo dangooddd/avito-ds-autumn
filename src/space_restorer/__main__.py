@@ -26,9 +26,9 @@ if __name__ == "__main__":
     parser.add_argument("file", type=Path)
     parser.add_argument("--pretrained-space", type=str, default=MODEL_SPACE)
     parser.add_argument("--pretrained-gap", type=str, default=MODEL_GAP)
-    parser.add_argument("--spaces", type=float, default=0.4)
-    parser.add_argument("--max-tries", type=int, default=10)
-    parser.add_argument("--min-tries", type=int, default=3)
+    parser.add_argument("--spaces", type=float, default=0)
+    parser.add_argument("--max-tries", type=int, default=3)
+    parser.add_argument("--min-tries", type=int, default=1)
     parser.add_argument("--save-path", type=Path, required=True)
     args = parser.parse_args()
 

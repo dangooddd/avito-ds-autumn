@@ -22,12 +22,31 @@ avito-ds-autumn/
 
 ## Использование
 
-```bash
+Чтобы посмотреть формат ожидаемых данных для скриптов (модулей):
+```sh
 # Преобразовать входной файл (как на stepik) в выходной файл
-python -m space_restorator --help
+uv run -m space_restorer --help # python -m space_restorer --help
 
 # Восстановление пробелов для одного текста
-python -m space_restorator.cascade --help
+uv run -m space_restorer.cascade --help # python -m space_restorer.cascade --help
+```
+
+Пример использования:
+```sh
+# Для файла
+uv run -m space_restorator --max-tries 3 --save-path data/output/output.txt data/input/dataset.txt
+
+# Для текста
+uv run -m space_restorator --max-tries 3 "Приветмир"
+```
+
+> [!Warning]
+> В файле dataset.txt ожидается, что все строки, использующие запятую (,), обернуты в кавычки (")
+> Датасеты на stepik находятся в 'некорректном' формате
+
+Для включения недетерминированного режима:
+```sh
+uv run -m space_restorator --max-tries 3 --spaces 0.2 --save-path data/output/output.txt data/input/dataset.txt
 ```
 
 ## Подход к решению
@@ -52,6 +71,11 @@ python -m space_restorator.cascade --help
 Однако токенизатор обычной мультиязыковой модели (SequencePiece) показал себя лучше.
 
 Модель 'склейки' полностью зависит от токенизатора SequencePiece.
+
+## Железо
+Модель обучена на видеокарте `NVIDIA 5060 Ti 16GB`.
+По умолчанию запускается на CPU, потребляет порядка ~3GB оперативной памяти.
+Для более быстрой работы алгоритма можно уменьшить максимальное число каскадных повторений с помощью флага `--max-tries`.
 
 ## Зависимости
 В качестве утилиты управления зависимостями использовался [uv](https://docs.astral.sh/uv/).

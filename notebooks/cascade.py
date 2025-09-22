@@ -1,7 +1,7 @@
 # %%
-from space_restorator.bert.predict import predict as space_predict
-from space_restorator.bert_gap.predict import predict as gap_predict
-from space_restorator.bert_gap.dataset import insert_random_spaces_with_indices
+from space_restorer.bert.predict import predict as space_predict
+from space_restorer.bert_gap.predict import predict as gap_predict
+from space_restorer.bert_gap.dataset import insert_random_spaces_with_indices
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 import re
 

@@ -9,6 +9,8 @@ import re
 MODEL_GAP = "models/checkpoint-gap"
 MODEL_SPACE = "models/checkpoint-space"
 
+# Словарь для помощи модели в детекции самостоятельных слов, плохо ею изученных.
+# Данные слова самостоятельны и не встречаются как подстроки других слов.
 dictionary = {
     "новый",
     "куплю",
@@ -76,12 +78,37 @@ def cascade(
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--pretrained-space", type=str, default=MODEL_SPACE)
-    parser.add_argument("--pretrained-gap", type=str, default=MODEL_GAP)
-    parser.add_argument("--spaces", type=float, default=0.4)
-    parser.add_argument("--max-tries", type=int, default=10)
-    parser.add_argument("--min-tries", type=int, default=3)
-    parser.add_argument("text", type=str)
+    parser.add_argument(
+        "--pretrained-space",
+        type=str,
+        default=MODEL_SPACE,
+        help="Модель вставки пробелов. Может быть как названием модели, так и путем к чекпоинту.",
+    )
+    parser.add_argument(
+        "--pretrained-gap",
+        type=str,
+        default=MODEL_GAP,
+        help="Модель склейки. Может быть как названием модели, так и путем к чекпоинту.",
+    )
+    parser.add_argument(
+        "--spaces",
+        type=float,
+        default=0.4,
+        help="Процент пробелов, вставляемый на каждой итерации каскадного алгоритма. Если 0, действует детерминированный режим.",
+    )
+    parser.add_argument(
+        "--max-tries",
+        type=int,
+        default=10,
+        help="Максимальное число итераций каскадного алгоритма.",
+    )
+    parser.add_argument(
+        "--min-tries",
+        type=int,
+        default=3,
+        help="Минимальное число итераций каскадного алгоритма.",
+    )
+    parser.add_argument("text", type=str, help="Входная строка")
     args = parser.parse_args()
 
     tokenizer_gap = AutoTokenizer.from_pretrained(args.pretrained_gap)

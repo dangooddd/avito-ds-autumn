@@ -24,15 +24,46 @@ def string_from_pos(pos: list):
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("file", type=Path)
-    parser.add_argument("--pretrained-space", type=str, default=MODEL_SPACE)
-    parser.add_argument("--pretrained-gap", type=str, default=MODEL_GAP)
-    parser.add_argument("--spaces", type=float, default=0)
-    parser.add_argument("--max-tries", type=int, default=3)
-    parser.add_argument("--min-tries", type=int, default=1)
-    parser.add_argument("--save-path", type=Path, required=True)
+    parser.add_argument(
+        "--pretrained-space",
+        type=str,
+        default=MODEL_SPACE,
+        help="Модель вставки пробелов. Может быть как названием модели, так и путем к чекпоинту.",
+    )
+    parser.add_argument(
+        "--pretrained-gap",
+        type=str,
+        default=MODEL_GAP,
+        help="Модель склейки. Может быть как названием модели, так и путем к чекпоинту.",
+    )
+    parser.add_argument(
+        "--spaces",
+        type=float,
+        default=0,
+        help="Процент пробелов, вставляемый на каждой итерации каскадного алгоритма. Если 0, действует детерминированный режим.",
+    )
+    parser.add_argument(
+        "--max-tries",
+        type=int,
+        default=3,
+        help="Максимальное число итераций каскадного алгоритма.",
+    )
+    parser.add_argument(
+        "--min-tries",
+        type=int,
+        default=1,
+        help="Минимальное число итераций каскадного алгоритма.",
+    )
+    parser.add_argument(
+        "--save-path",
+        type=Path,
+        required=True,
+        help="Пусть для сохранения выходного файла.",
+    )
     args = parser.parse_args()
 
-    # device = "cuda" if torch.cuda.is_available() else "cpu"
+    # cpu, так как используются операции с текстом
+    # TODO: адаптировать для GPU
     device = "cpu"
 
     tokenizer_gap = AutoTokenizer.from_pretrained(args.pretrained_gap)
@@ -62,7 +93,7 @@ if __name__ == "__main__":
         find_pos(text, pred) for text, pred in zip(df["text_no_spaces"], predictions)
     ]
     results = [string_from_pos(pos) for pos in positions]
-    df = pd.DataFrame({"id": df["id"], "predicted_positions": results})
 
+    df = pd.DataFrame({"id": df["id"], "predicted_positions": results})
     args.save_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(args.save_path, index=False)

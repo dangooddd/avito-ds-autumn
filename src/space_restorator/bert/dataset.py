@@ -57,7 +57,14 @@ def create_dataset(tokenizer):
     tokenized_dataset = raw_dataset.map(
         lambda ex: tokenize_label_spaces(ex, tokenizer),
         batched=True,
-        remove_columns=["text", "title", "url", "datetime", "source", "timestamp"],
+        remove_columns=[
+            "text_markdown",
+            "title",
+            "url",
+            "datetime",
+            "source",
+            "timestamp",
+        ],
     )
 
     return tokenized_dataset

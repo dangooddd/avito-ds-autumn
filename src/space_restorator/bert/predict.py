@@ -2,14 +2,12 @@ from transformers import (
     AutoTokenizer,
     AutoModelForTokenClassification,
 )
-
+import torch
 from argparse import ArgumentParser
 
 
 def restore_spaces(tokens, offsets, labels, tokenizer):
     restored = tokenizer.convert_tokens_to_string(tokens)
-    print(tokens)
-    print(labels)
     o = 0
     for token, (s, e), label in zip(tokens, offsets, labels):
         if token in tokenizer.all_special_tokens:

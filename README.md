@@ -19,7 +19,7 @@ uv sync
 
 Можно установить через `pip`:
 ```sh
-pip install -r requirements # не тестировал
+pip install -r requirements.txt # не тестировал
 pip install -e . # обязательно!
 ```
 

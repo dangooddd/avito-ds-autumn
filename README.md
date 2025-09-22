@@ -61,8 +61,8 @@ uv run -m space_restorator --max-tries 3 "Приветмир"
 ```
 
 > [!Warning]
-> В файле dataset.txt ожидается, что все строки, использующие запятую (,), обернуты в кавычки (")
-> Датасеты на stepik находятся в 'некорректном' формате
+> В файле dataset.txt ожидается, что все строки, использующие запятую (,), обернуты в кавычки (").
+> Датасеты на stepik находятся в 'некорректном' формате.
 
 Для включения недетерминированного режима:
 ```sh
@@ -101,3 +101,5 @@ uv run -m space_restorator --max-tries 3 --spaces 0.2 --save-path data/output/ou
 
 Проект использует предобученные модели BERT (мультиязычная), адаптированные для задачи восстановления пробелов.
 Предобученные веса из библиотеки huggingface `transformers`, название базовой модели -- `xlm-roberta-base`.
+
+Модели обучались на открырых датасетах [IlyaGusev/picabu](https://huggingface.co/datasets/IlyaGusev/pikabu) и [IlyaGusev/ru_news](https://huggingface.co/datasets/IlyaGusev/ru_news).

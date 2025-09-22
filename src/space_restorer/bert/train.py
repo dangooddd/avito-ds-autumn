@@ -24,6 +24,13 @@ def train(
     acc=1,
     resume=False,
 ):
+    """
+    Тренировка модели
+
+    Args:
+        ...
+        pretrained: может быть как названием модели, так и путем к чекпоинту
+    """
     tokenizer = AutoTokenizer.from_pretrained(pretrained)
     model = AutoModelForTokenClassification.from_pretrained(
         pretrained,

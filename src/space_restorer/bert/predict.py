@@ -6,8 +6,20 @@ from argparse import ArgumentParser
 
 
 def restore_spaces(tokens, offsets, labels, tokenizer):
+    """
+    Восстанавливает пробелы в строке с учетом предсказаний модели.
+
+    Args:
+        tokens: токены исходного текста
+        offsets: offset_map токенов
+        labels: предсказания модели
+        tokenizer: токенизатор
+
+    Returns:
+        result: размеченная строка
+    """
     restored = tokenizer.convert_tokens_to_string(tokens)
-    o = 0
+    o = 0  # расхождения исходной строки и возвращаемой
     for token, (s, e), label in zip(tokens, offsets, labels):
         if token in tokenizer.all_special_tokens:
             continue
@@ -19,6 +31,12 @@ def restore_spaces(tokens, offsets, labels, tokenizer):
 
 
 def predict(texts, tokenizer, model):
+    """
+    Восстанавливает пробелы в тексте батчем.
+
+    Returns:
+        results: батч с результатами
+    """
     inputs = tokenizer(
         texts,
         padding=True,
@@ -31,7 +49,7 @@ def predict(texts, tokenizer, model):
     )
 
     offset_mapping = inputs["offset_mapping"]
-    del inputs["offset_mapping"]
+    del inputs["offset_mapping"]  # модель не принимает offset_mapping
 
     outputs = model(**inputs)["logits"].argmax(dim=-1)
     restored = []

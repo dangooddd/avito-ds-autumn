@@ -4,6 +4,13 @@ import random
 
 
 def insert_random_spaces_with_indices(text, num_spaces):
+    """
+    Вставляет num_spaces пробелов в строку
+
+    Returns:
+        text: текст с вставленными пробелами
+        inds: индексы вставленных пробелов
+    """
     if num_spaces <= 0 or num_spaces >= len(text):
         return text, []
 
@@ -18,6 +25,7 @@ def insert_random_spaces_with_indices(text, num_spaces):
     for pos in selected_positions:
         pos_with_offset = pos + offset
 
+        # не вставлять, если символ пробел, или до него пробел
         if ((pos > 0 and text[pos - 1]) == " ") or (text[pos] == " "):
             continue
 
@@ -28,7 +36,20 @@ def insert_random_spaces_with_indices(text, num_spaces):
     return "".join(result), space_indices
 
 
-def label_gaps(text, tokenizer):
+def label_gaps(text: str, tokenizer):
+    """
+    Случайно разрывает текст, токенизирует и отмечает токены, которые `оторвало`.
+
+    Args:
+        text: размечаемый текст
+        tokenizer: используемый токенизатор
+
+    Returns:
+        input_ids: input_ids полученные из разовранного текста
+        tokens: токены полученного текста
+        attention_mask: attention mask полученного текста
+        labels: созданные метки
+    """
     new_text = re.sub(r"\s+", " ", text)
     new_text, marks = insert_random_spaces_with_indices(text, int(len(text) * 0.3))
     encoded = tokenizer(
@@ -73,9 +94,7 @@ def tokenize_label_spaces(examples, tokenizer):
 
 
 def create_dataset(tokenizer):
-    # raw_dataset = load_dataset(
-    #     "IlyaGusev/ru_news", split="train", streaming=True, trust_remote_code=True
-    # )
+    """Создает датасет для обучения модели склеивания"""
     raw_dataset = load_dataset(
         "IlyaGusev/pikabu", split="train", streaming=True, trust_remote_code=True
     )

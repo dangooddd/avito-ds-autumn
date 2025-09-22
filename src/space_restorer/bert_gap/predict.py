@@ -7,6 +7,12 @@ from argparse import ArgumentParser
 
 
 def remove_gaps(tokens, offsets, labels, tokenizer):
+    """
+    Производит `склейку` токенизированного текста
+
+    Returns:
+        text: строка с меньшим числом пробелов, согласно предсказанию модели labels
+    """
     restored = []
     for token, (s, e), label in zip(tokens, offsets, labels):
         if token in tokenizer.all_special_tokens:
@@ -20,6 +26,12 @@ def remove_gaps(tokens, offsets, labels, tokenizer):
 
 
 def predict(texts, tokenizer, model):
+    """
+    Убирает пробелы в тексте батчами. См. `remove_gaps`
+
+    Returns:
+        results: батч с результатами
+    """
     inputs = tokenizer(
         texts,
         padding=True,

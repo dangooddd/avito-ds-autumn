@@ -71,7 +71,6 @@ def cascade(
 
     text = gap_predict([text], tokenizer_gap, model_gap)[0].strip()
     text = add_spaces_around_words(text, dictionary)
-    print(text)
     return text
 
 

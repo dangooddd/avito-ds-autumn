@@ -3,6 +3,7 @@ from .cascade import cascade, MODEL_GAP, MODEL_SPACE
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from pathlib import Path
 import pandas as pd
+from tqdm import tqdm
 
 
 def find_pos(text: str, pred: str):
@@ -87,10 +88,14 @@ if __name__ == "__main__":
             spaces=args.spaces,
             text=text,
         )
-        for text in df["text_no_spaces"]
+        for text in tqdm(df["text_no_spaces"], desc="Обработка текста")
     ]
     positions = [
-        find_pos(text, pred) for text, pred in zip(df["text_no_spaces"], predictions)
+        find_pos(text, pred)
+        for text, pred in tqdm(
+            zip(df["text_no_spaces"], predictions),
+            desc="Нахождение позиций пробелов",
+        )
     ]
     results = [string_from_pos(pos) for pos in positions]
 

@@ -121,6 +121,7 @@ dependencies = [
     { name = "pandas" },
     { name = "scikit-learn" },
     { name = "torch" },
+    { name = "tqdm" },
     { name = "transformers" },
 ]
 
@@ -142,6 +143,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.3.2" },
     { name = "scikit-learn", specifier = ">=1.7.2" },
     { name = "torch", specifier = ">=2.8.0" },
+    { name = "tqdm", specifier = ">=4.67.1" },
     { name = "transformers", specifier = ">=4.56.2" },
 ]
 

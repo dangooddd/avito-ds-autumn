@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "accelerate>=1.10.1",
+    "character-tokenizer",
     "datasets==3.6.0",
     "pandas>=2.3.2",
     "scikit-learn>=1.7.2",
@@ -16,6 +17,9 @@ dependencies = [
 [tool.uv]
 package = true
 
+[tool.uv.sources]
+character-tokenizer = { git = "https://github.com/dariush-bahrami/character-tokenizer" }
+
 [dependency-groups]
 dev = [
     "huggingface-hub>=0.35.0",
@@ -23,6 +27,7 @@ dev = [
     "ipywidgets>=8.1.7",
     "jsonlines>=4.0.0",
     "pysimdjson>=7.0.2",
+    "sklearn-crfsuite>=0.5.0",
     "tensorboard>=2.20.0",
     "zstandard>=0.25.0",
 ]

@@ -58,24 +58,57 @@ def cascade(
     min_tries,
     spaces,
 ):
+    global dictionary
     text = split_string_with_spaces(text)
     prev = None
     for i in range(max_tries):
         text = gap_predict([text], tokenizer_gap, model_gap)[0]
         text = add_spaces_around_words(text, dictionary)
         text = space_predict([text], tokenizer_space, model_space)[0]
-
         if spaces > 0:
             text, _ = insert_random_spaces_with_indices(text, int(len(text) * spaces))
         text = re.sub(r"\s+", " ", text)
 
         if prev == text and i >= min_tries:
             break
+
         prev = text
 
     text = gap_predict([text], tokenizer_gap, model_gap)[0].strip()
     text = add_spaces_around_words(text, dictionary)
     return text
+
+
+def load_models(
+    model_space_pretrained: str = MODEL_SPACE,
+    model_gap_pretrained: str = MODEL_GAP,
+    device: str = "cpu",
+):
+    """
+    Инициализирует space и gap модели.
+
+    Args:
+        model_space_pretrained: путь к чекпоинту space модели
+        model_gap_pretrained: путь к чекпоинту gap модели
+        device: device для инициализации
+
+    Returns:
+        model_space: space модель
+        model_gap: gap модель
+        tokenizer_space: токенизатор space модели
+        tokenizer_gap: токенизатор gap модели
+    """
+
+    tokenizer_gap = AutoTokenizer.from_pretrained(model_gap_pretrained)
+    tokenizer_space = AutoTokenizer.from_pretrained(model_space_pretrained)
+    model_gap = AutoModelForTokenClassification.from_pretrained(
+        model_gap_pretrained
+    ).to(device)
+    model_space = AutoModelForTokenClassification.from_pretrained(
+        model_space_pretrained
+    ).to(device)
+
+    return model_space, model_gap, tokenizer_space, tokenizer_gap
 
 
 if __name__ == "__main__":
@@ -121,14 +154,11 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() and not args.cpu else "cpu"
     print(f"Используется устройство: {device}")
 
-    tokenizer_gap = AutoTokenizer.from_pretrained(args.pretrained_gap)
-    tokenizer_space = AutoTokenizer.from_pretrained(args.pretrained_space)
-    model_gap = AutoModelForTokenClassification.from_pretrained(args.pretrained_gap).to(
-        device
+    model_space, model_gap, tokenizer_space, tokenizer_gap = load_models(
+        model_space_pretrained=args.pretrained_space,
+        model_gap_pretrained=args.pretrained_gap,
+        device=device,
     )
-    model_space = AutoModelForTokenClassification.from_pretrained(
-        args.pretrained_space
-    ).to(device)
 
     result = cascade(
         model_space=model_space,

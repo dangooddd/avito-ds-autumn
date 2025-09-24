@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
-from .cascade import cascade, MODEL_GAP, MODEL_SPACE
-from transformers import AutoTokenizer, AutoModelForTokenClassification
+from .cascade import load_models, cascade, MODEL_GAP, MODEL_SPACE
 from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
@@ -72,14 +71,11 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() and not args.cpu else "cpu"
     print(f"Используется устройство: {device}")
 
-    tokenizer_gap = AutoTokenizer.from_pretrained(args.pretrained_gap)
-    tokenizer_space = AutoTokenizer.from_pretrained(args.pretrained_space)
-    model_gap = AutoModelForTokenClassification.from_pretrained(args.pretrained_gap).to(
-        device
+    model_space, model_gap, tokenizer_space, tokenizer_gap = load_models(
+        model_space_pretrained=args.pretrained_space,
+        model_gap_pretrained=args.pretrained_gap,
+        device=device,
     )
-    model_space = AutoModelForTokenClassification.from_pretrained(
-        args.pretrained_space
-    ).to(device)
 
     df = pd.read_csv(args.file)
     predictions = [

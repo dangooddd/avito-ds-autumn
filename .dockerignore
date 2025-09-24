@@ -1,0 +1,6 @@
+data/
+models/
+.venv/
+notebooks/
+**/__pycache__/
+**/*egg-info

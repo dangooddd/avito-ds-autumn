@@ -129,7 +129,7 @@ curl -X POST "http://localhost:8000/restore" \                                  
 Модель 'склейки' полностью зависит от токенизатора SequencePiece.
 
 ## Системные требования
-Модель обучена на системе с:
+Модель обучена на системе со следующими характеристиками:
 - **GPU**: `NVIDIA 5060 Ti 16GB`
 - **CPU**: `AMD Ryzen 9700x`
 - **RAM**: `32GB DDR5`
@@ -143,4 +143,4 @@ curl -X POST "http://localhost:8000/restore" \                                  
 Проект использует предобученные модели BERT (мультиязычная), адаптированные для задачи восстановления пробелов.
 Предобученные веса из библиотеки huggingface `transformers`, название базовой модели - `xlm-roberta-base`.
 
-Модели обучались на открырых датасетах [IlyaGusev/picabu](https://huggingface.co/datasets/IlyaGusev/pikabu) и [IlyaGusev/ru_news](https://huggingface.co/datasets/IlyaGusev/ru_news).
+Модели обучались на открытых датасетах [IlyaGusev/picabu](https://huggingface.co/datasets/IlyaGusev/pikabu) и [IlyaGusev/ru_news](https://huggingface.co/datasets/IlyaGusev/ru_news).

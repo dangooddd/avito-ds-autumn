@@ -7,6 +7,7 @@ import torch
 
 
 def find_pos(text: str, pred: str):
+    """Находит позицию вставленных пробелов согласно условию задачи"""
     pos = []
     o = 0
     for i, ch in enumerate(text):

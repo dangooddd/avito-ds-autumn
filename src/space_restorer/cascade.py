@@ -24,11 +24,31 @@ dictionary = {
 
 
 def split_string_with_spaces(text: str):
+    """
+    Разделяет все буквы текста на отдельные слова.
+    Пример: "Приветмир" -> "П р и в е т м и р"
+
+    Args:
+        text: входная строка
+
+    Returns:
+        output: строка, в которой все буквы разделены на отдельные слова.
+    """
     text = " ".join(list(text))
     return re.sub(r"\s+", " ", text)
 
 
-def add_spaces_around_words(text, words):
+def add_spaces_around_words(text: str, words: set):
+    """
+    Выделяет слова из словаря пробелами.
+
+    Args:
+        text: исходный текст
+        words: словарь слов, которые необходимо выделить
+
+    Returns:
+        output: str
+    """
     escaped_words = [re.escape(w) for w in words]
     pattern = r"(" + "|".join(escaped_words) + r")"
 

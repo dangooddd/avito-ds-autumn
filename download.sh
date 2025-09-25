@@ -12,7 +12,7 @@ function download_checkpoint {
     ZIP="$NAME".zip
     DIR="$(dirname "$DEST_PATH")"
 
-    if [ ! -f "$DEST_PATH" ]; then
+    if [ ! -d "$DEST_PATH" ]; then
         echo "Downloading $NAME..."
         mkdir -p "$(dirname "$DEST_PATH")"
         if ! ./yd-wget.py "$URL"; then

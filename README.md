@@ -23,6 +23,14 @@ pip install -r requirements.txt # не тестировал
 pip install -e . # обязательно!
 ```
 
+Можно также использовать `docker`:
+```sh
+docker build -t space-restorer .
+docker volume create models # понадобится для доступа к чекпоинтам моделей в контейнере
+```
+
+Для вариантов запуска контейнера см. [Использование](#использование).
+
 - PyTorch
 - Transformers
 - Pandas
@@ -51,6 +59,13 @@ avito-ds-autumn/
     └── checkpoint-spaces    # Для модели восстановления пробелов
 ```
 
+> [!Note]
+> Перечисленные ниже команды можно запускать внутри docker контейнера.
+> Для этого скачанные веса моделей необходимо смонтировать в контейнер и запустить его в интерактивном режиме:
+> ```sh
+> docker run -it --name space-restorer-container -v models:/app/models space-restorer /bin/bash
+> ```
+
 Чтобы посмотреть формат ожидаемых данных для скриптов (модулей):
 ```sh
 # Преобразовать входной файл (как на stepik) в выходной файл
@@ -76,6 +91,20 @@ uv run -m space_restorator --max-tries 3 "Приветмир"
 Для включения недетерминированного режима:
 ```sh
 uv run -m space_restorator --max-tries 3 --spaces 0.2 --save-path data/output/output.txt data/input/dataset.txt
+```
+
+### REST API сервис
+Доступно также использование REST API сервиса (используется FastAPI).
+Для этого необходимо запустить docker контейнер в обычном режиме:
+```sh
+docker run -p 8000:8000 --name space-restorer-container -v models:/app/models space-restorer
+```
+
+Пример использования сервиса (имеет единственный endpoint):
+```sh
+curl -X POST "http://localhost:8000/restore" \                                                                   [.venv|v3.13.7][main]
+     -H "Content-Type: application/json" \
+     -d '{"text": "Примертекстаспропущеннымипробелами"}'
 ```
 
 ## Подход к решению

@@ -3,7 +3,7 @@ name = "avito-ds-autumn"
 version = "0.1.0"
 description = "Каскадный подход в задаче находения пропущенных пробелов"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "accelerate>=1.10.1",
     "datasets==3.6.0",

@@ -31,11 +31,6 @@ docker volume create models # понадобится для доступа к ч
 
 Для вариантов запуска контейнера см. [Использование](#использование).
 
-- PyTorch
-- Transformers
-- Pandas
-- Scikit-learn
-
 ## Структура проекта
 
 ```
@@ -61,9 +56,11 @@ avito-ds-autumn/
 
 > [!Note]
 > Перечисленные ниже команды можно запускать внутри docker контейнера.
-> Для этого скачанные веса моделей необходимо смонтировать в контейнер и запустить его в интерактивном режиме:
+> Для этого необходимо запустить контейнер в интерактивном режиме и установить веса моделей, если это первый запуск:
 > ```sh
+> docker volume create models # если еще не сделано
 > docker run -it --name space-restorer-container -v models:/app/models space-restorer /bin/bash
+> ./download.sh # при первом запуске
 > ```
 
 Чтобы посмотреть формат ожидаемых данных для скриптов (модулей):
@@ -78,10 +75,10 @@ uv run -m space_restorer.cascade --help # python -m space_restorer.cascade --hel
 Пример использования:
 ```sh
 # Для файла
-uv run -m space_restorator --max-tries 3 --save-path data/output/output.txt data/input/dataset.txt
+uv run -m space_restorer --max-tries 3 --save-path data/output/output.txt data/input/dataset.txt
 
 # Для текста
-uv run -m space_restorator --max-tries 3 "Приветмир"
+uv run -m space_restorer --max-tries 3 "Приветмир"
 ```
 
 > [!Warning]
@@ -90,14 +87,15 @@ uv run -m space_restorator --max-tries 3 "Приветмир"
 
 Для включения недетерминированного режима:
 ```sh
-uv run -m space_restorator --max-tries 3 --spaces 0.2 --save-path data/output/output.txt data/input/dataset.txt
+uv run -m space_restorer --max-tries 3 --spaces 0.2 --save-path data/output/output.txt data/input/dataset.txt
 ```
 
 ### REST API сервис
 Доступно также использование REST API сервиса (используется FastAPI).
 Для этого необходимо запустить docker контейнер в обычном режиме:
 ```sh
-docker run -p 8000:8000 --name space-restorer-container -v models:/app/models space-restorer
+docker volume create models # если еще не сделано
+docker run -p 8000:8000 --name space-restorer-container -v models:/app/models space-restorer # веса скачаются автоматически
 ```
 
 Пример использования сервиса (имеет единственный endpoint):

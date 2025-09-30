@@ -11,8 +11,8 @@ tokenizer_space = None
 device = "cpu"
 
 cascade_config = {
-    "max_tries": 5,
-    "min_tries": 1,
+    "max_tries": 15,
+    "min_tries": 7,
     "spaces": 0.2,
 }
 

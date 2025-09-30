@@ -1,21 +1,10 @@
 from argparse import ArgumentParser
 from .cascade import load_models, cascade, MODEL_GAP, MODEL_SPACE
+from .validate import find_pos
 from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 import torch
-
-
-def find_pos(text: str, pred: str):
-    """Находит позицию вставленных пробелов согласно условию задачи"""
-    pos = []
-    o = 0
-    for i, ch in enumerate(text):
-        if pred[i + o] == " ":
-            o += 1
-            pos.append(i)
-
-    return pos
 
 
 def string_from_pos(pos: list):
@@ -41,19 +30,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--spaces",
         type=float,
-        default=0,
+        default=0.2,
         help="Процент пробелов, вставляемый на каждой итерации каскадного алгоритма. Если 0, действует детерминированный режим.",
     )
     parser.add_argument(
         "--max-tries",
         type=int,
-        default=3,
+        default=15,
         help="Максимальное число итераций каскадного алгоритма.",
     )
     parser.add_argument(
         "--min-tries",
         type=int,
-        default=1,
+        default=7,
         help="Минимальное число итераций каскадного алгоритма.",
     )
     parser.add_argument(

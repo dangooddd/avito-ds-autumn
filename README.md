@@ -31,18 +31,6 @@ docker volume create models # понадобится для доступа к ч
 
 Для вариантов запуска контейнера см. [Использование](#использование).
 
-## Структура проекта
-
-```
-avito-ds-autumn/
-├── src/space_restorer/       # Основной код проекта
-├── models/                   # Модели BERT
-├── data/                     # Данные для обучения/тестирования
-├── notebooks/                # Playground
-├── pyproject.toml            # Основной файл для uv
-└── requirements.txt          # Зависимости для pip
-```
-
 ## Использование
 
 По умолчанию скрипты ожидают веса моделей в формате чекпоинтов (ссылка на скачивания через [Яндекс.Диск](https://disk.yandex.ru/d/PVFVTkbnQPnjhw))
@@ -87,7 +75,7 @@ uv run -m space_restorer --max-tries 3 "Приветмир"
 
 Для включения недетерминированного режима:
 ```sh
-uv run -m space_restorer --max-tries 3 --spaces 0.2 --save-path data/output/output.txt data/input/dataset.txt
+uv run -m space_restorer --max-tries 5 --min_tries 2 --spaces 0.2 --save-path data/output/output.txt data/input/dataset.txt
 ```
 
 ### REST API сервис
@@ -100,10 +88,18 @@ docker run -p 8000:8000 --name space-restorer-container -v models:/app/models sp
 
 Пример использования сервиса (имеет единственный endpoint):
 ```sh
-curl -X POST "http://localhost:8000/restore" \                                                                   [.venv|v3.13.7][main]
-     -H "Content-Type: application/json" \
-     -d '{"text": "Примертекстаспропущеннымипробелами"}'
+curl -X POST "http://localhost:8000/restore" -H "Content-Type: application/json" -d '{"text": "Примертекстаспропущеннымипробелами"}'
 ```
+
+## Валидация
+Валидация по ключевой метрике `F1 score` производилась для разных значениев гиперпараметров `max_tries`, `min_tries`, `spaces`.
+Ниже приведены графики на выборке обьемом 100 текстов (~2200 предложений).
+
+Оптимальные значения параметров:
+| Время  | spaces | max_tries | min_tries | f1     |
+| ------ | ------ | --------- | --------- | ---    |
+| Быстро | 0.0    | 3         | 0         | ~0.875 |
+| Любое  | 0.2    | 15        | 7         | ~0.89  |
 
 ## Подход к решению
 Предложенный алгоритм к поставленной задаче можно описать следующим образом:

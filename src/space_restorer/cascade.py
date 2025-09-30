@@ -85,7 +85,7 @@ def cascade(
         text = gap_predict([text], tokenizer_gap, model_gap)[0]
         text = add_spaces_around_words(text, dictionary)
         text = space_predict([text], tokenizer_space, model_space)[0]
-        if spaces > 0:
+        if spaces > 0 and i < min_tries:
             text, _ = insert_random_spaces_with_indices(text, int(len(text) * spaces))
         text = re.sub(r"\s+", " ", text)
 
@@ -148,19 +148,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--spaces",
         type=float,
-        default=0.4,
+        default=0.2,
         help="Процент пробелов, вставляемый на каждой итерации каскадного алгоритма. Если 0, действует детерминированный режим.",
     )
     parser.add_argument(
         "--max-tries",
         type=int,
-        default=10,
+        default=15,
         help="Максимальное число итераций каскадного алгоритма.",
     )
     parser.add_argument(
         "--min-tries",
         type=int,
-        default=3,
+        default=7,
         help="Минимальное число итераций каскадного алгоритма.",
     )
     parser.add_argument(
